@@ -55,19 +55,11 @@ class NFL():
         self.format_ = format_
         self._sleep_time = sleep_time
         self.timeout = timeout
-        self.api_root = "https://api.sportradar.us/nfl/official/" \
-                            + self.access_level + "/" \
-                            + self.version + "/" \
-                            + self.language_code + "/games/"
+        self.api_root = f"https://api.sportradar.us/nfl/official/{self.access_level}/{self.version}/{self.language_code}/games/"
         
     def season_schedule(self, year, nfl_season="reg"):
-        api_path = self.api_root \
-                    + str(year) + "/" \
-                    + nfl_season \
-                    + "/schedule." \
-                    + self.format_ \
-                    + "?api_key=" \
-                    + self.api_key
+        year = year
+        api_path = f"{self.api_root}{str(year)}/{nfl_season}/schedule.{self.format_}?api_key={self.api_key}"
         time.sleep(self._sleep_time)
         data = self.session.get(api_path, timeout=self.timeout)
         
@@ -79,12 +71,7 @@ class NFL():
         return data
     
     def game_statistics(self, game_id):
-        api_path = self.api_root \
-                    + str(game_id) \
-                    + "/statistics." \
-                    + self.format_ \
-                    + "?api_key=" \
-                    + self.api_key
+        api_path = f"{self.api_root}{str(game_id)}/statistics.{self.format_}?api_key={self.api_key}"
         time.sleep(self._sleep_time)
         data = self.session.get(api_path, timeout=self.timeout)
         
@@ -94,24 +81,7 @@ class NFL():
             return data.json()
         
         return data
-    
-    def game_roster(self, game_id):
-        api_path = self.api_root \
-                    + str(game_id) \
-                    + "/roster." \
-                    + self.format_ \
-                    + "?api_key=" \
-                    + self.api_key
-        time.sleep(self._sleep_time)
-        data = self.session.get(api_path, timeout=self.timeout)
-        
-        data.raise_for_status()
-        
-        if data.status_code != 204:
-            return data.json()
-        
-        return data
-    
+
     
     
 class CLEAN():
@@ -299,6 +269,3 @@ class CLEAN():
         team_stats_df = pd.concat([home, away])
         
         return team_stats_df
-    
-    def game_roster_clean(self, data):
-        pass
