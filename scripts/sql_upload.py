@@ -233,6 +233,8 @@ def week_table(engine):
         week_id_df["season.id"] = week_id_df["season.id"].apply(lambda x: ", ".join(map(str, x)))
         week_id_df["season.year"] = week_id_df["season.year"].apply(lambda x: ", ".join(map(str, x)))
         week_id_df["season.type"] = week_id_df["season.type"].apply(lambda x: ", ".join(map(str, x)))
+        week_id_df[["week.sequence", "season.year"]] = week_id_df[["week.sequence", "season.year"]].astype(int)
+        week_id_df.sort_values(["season.year", "week.sequence"], inplace=True)
         
         week_id_df.to_sql("IDWeekTable", engine, if_exists="replace", index=False, schema="dbo", chunksize=500)
         
